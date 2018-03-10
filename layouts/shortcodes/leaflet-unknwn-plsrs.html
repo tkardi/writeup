@@ -9,15 +9,6 @@
     }
 </style>
 <script src="https://npmcdn.com/@turf/turf/turf.min.js" type="text/javascript"></script>
-<svg id="gradients" width="1" height="1">
-   <defs>
-       <linearGradient id="nitrogen" x1="0%" y1="100%" x2="0%" y2="0%">
-           <stop offset="5%" style="stop-color:#1D022D;stop-opacity:0.8" />
-           <stop offset="70%" style="stop-color:#9F07F7;stop-opacity:0.9" />
-           <stop offset="100%" style="stop-color:#F7C9FF;stop-opacity:1" />
-       </linearGradient>
-   </defs>
-</svg>
 <div id='map{{.Get "id"}}' style='width:{{.Get "width"}};height:{{.Get "height"}};'></div>
 
 <script>
