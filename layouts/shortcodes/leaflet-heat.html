@@ -1,0 +1,64 @@
+{{if .IsNamedParams}}
+<style>
+    /* override these for one-two-three theme*/
+    .leaflet-control a::after {
+        content:none;
+    }
+    .leaflet-control a:hover {
+        border-radius:0px;
+    }
+</style>
+
+<div id='map{{.Get "id"}}' style='width:{{.Get "width"}};height:{{.Get "height"}};'></div>
+
+<script src="https://cdn.jsdelivr.net/npm/heatmap.js@2.0.5/build/heatmap.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/leaflet-heatmap@1.0.0/leaflet-heatmap.min.js" type="text/javascript"></script>
+<script>
+    fetch({{.Get "dataURL"}})
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var features = [];
+            data.features.filter(function(feature) {
+                return feature.geometry.type == 'Point' && feature.properties[{{.Get "dataKey"}}] >= {{.Get "dataMin"}};
+            }).forEach(function(feature) {
+                features.push({
+                    lng:feature.geometry.coordinates[0],
+                    lat:feature.geometry.coordinates[1],
+                    count:feature.properties[{{.Get "dataKey"}}]
+                });
+            });
+
+            var map = L.map('map{{.Get "id"}}').setView([{{.Get "lat"}}, {{.Get "lon"}}], {{.Get "z"}}),
+                gradient;
+            L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png").addTo(map);
+            {{ if .Get "gradient" }}
+                gradient = JSON.parse({{.Get "gradient"}});
+            {{ end }}
+            var config = {
+                radius: {{.Get "dataRadius"}} || 0.1,
+                maxOpacity: {{.Get "dataMaxOpacity"}} || 0.8,
+                scaleRadius: {{.Get "dataScaleRadius"}} || true,
+                useLocalExtrema: {{.Get "dataUseLocalExtrema"}} || false,
+                gradient: gradient,
+                latField:"lat",
+                lngField:"lng",
+                valueField:"count",
+            };
+            var heat = new HeatmapOverlay(config);
+            heat.addTo(map);
+            heat.setData({max:{{.Get "dataMax"}}, min:{{.Get "dataMin"}}, data:features});
+
+        map.attributionControl.addAttribution(
+            'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+        );
+        {{ if .Get "dataAttribution" }}
+            map.attributionControl.addAttribution(
+                '<br>Heatmap data: {{.Get "dataAttribution"}}'
+            );
+        {{ end }}
+        });
+</script>
+
+{{end}}

@@ -1,0 +1,148 @@
+{{if .IsNamedParams}}
+<style>
+    /* override these for one-two-three theme*/
+    .leaflet-control a::after {
+        content:none;
+    }
+    .leaflet-control a:hover {
+        border-radius:0px;
+    }
+</style>
+<script src="https://npmcdn.com/@turf/turf/turf.min.js" type="text/javascript"></script>
+<svg id="gradients" width="1" height="1">
+   <defs>
+       <linearGradient id="nitrogen" x1="0%" y1="100%" x2="0%" y2="0%">
+           <stop offset="5%" style="stop-color:#1D022D;stop-opacity:0.8" />
+           <stop offset="70%" style="stop-color:#9F07F7;stop-opacity:0.9" />
+           <stop offset="100%" style="stop-color:#F7C9FF;stop-opacity:1" />
+       </linearGradient>
+   </defs>
+</svg>
+<div id='map{{.Get "id"}}' style='width:{{.Get "width"}};height:{{.Get "height"}};'></div>
+
+<script>
+    var processAsLines = function(data) {
+        var w = parseInt({{.Get "dataWidth"}}),
+            h = parseInt({{.Get "dataHeight"}}),
+            denominator = Number({{.Get "dataDenominator"}}) || 10,
+            slope = Number({{.Get "dataSlope"}}) || 5,
+            saturateAt = Number({{.Get "dataSaturateAt"}}) || 0.1,
+            lines = [],
+            key = {{.Get "dataKey"}};
+
+        for (var i=0;i<h;i++) {
+            var features = data.features.slice(i*w, i*w+w),
+                coords = features.map(function(feature, j, arr) {
+                    var val = feature.properties[key],
+                        val = slope * (val / denominator),
+                        sign = val < 0 ? -1 : 1
+                        val = Math.abs(val) > saturateAt ? sign * saturateAt + val * 0.01 : val,
+                        coordinates = feature.geometry.coordinates;
+                    return [
+                        coordinates[0],
+                        coordinates[1] + val,
+                        feature.properties[key]];
+                });
+            if (coords.length > 0) {
+                lines.push(turf.lineString(coords));
+            }
+        }
+        lines = lines.reverse();
+        return lines;
+    };
+
+    var processAsPolygons = function(data) {
+        var w = parseInt({{.Get "dataWidth"}}),
+            h = parseInt({{.Get "dataHeight"}}),
+            denominator = Number({{.Get "dataDenominator"}}) || 10,
+            slope = Number({{.Get "dataSlope"}}) || 5,
+            saturateAt = Number({{.Get "dataSaturateAt"}}) || 0.1,
+            lines = [],
+            key = {{.Get "dataKey"}};
+
+        for (var i=0;i<h;i++) {
+            var features = data.features.slice(i*w, i*w+w),
+                coords = features.map(function(feature, j, arr) {
+                    var val = feature.properties[key],
+                        prv = arr[j-1] ? arr[j-1].properties[key] : 0,
+                        nxt = arr[j+1] ? arr[j+1].properties[key] : 0,
+                        nxtNxt = arr[j+2] ? arr[j+2].properties[key] : 0,
+                        prvPrv = arr[j-2] ? arr[j-2].properties[key] : 0,
+                        val = slope * (val / denominator),
+                        sign = val < 0 ? -1 : 1
+                        val = Math.abs(val) > saturateAt ? sign * saturateAt + val * 0.01 : val,
+                        coordinates = feature.geometry.coordinates;
+                    if (val == 0  && (prv == 0 && prvPrv == 0 && nxt == 0 && nxtNxt == 0)) {
+                        // if current value is 0
+                        // as well as the previous and the one before
+                        // and the next and the one after that
+                        // then this point will be discarded.
+                        return;
+                    } else if (val != 0 && (j == 0 || j == w - 1) ) {
+                        // now this is completely wrong
+                        // and should not be done in real life, but still:
+                        // if current value != 0 but we are either at the first point
+                        // in the grid's left side or last point at the grid's right side
+                        // just surpress the value, return as 0.
+                        return [coordinates[0], coordinates[1], 0];
+                    }
+                    return [
+                        coordinates[0],
+                        coordinates[1] + val,
+                        feature.properties[key]
+                    ];
+                });
+            var ring = [];
+            coords.forEach(function(e, idx, arr) {
+                 var nxt = arr[idx+1];
+                 if (e !== undefined) {
+                     ring.push(e);
+                 }
+                 if (nxt === undefined && ring.length > 2) {
+                     lines.push(turf.lineToPolygon(turf.lineString(ring)));
+                     ring = [];
+                 }
+            });
+        }
+        // again, draw northernmost row first
+        lines = lines.reverse();
+        return lines;
+    }
+
+    fetch({{.Get "dataURL"}})
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var type = {{.Get "type"}} || "lines",
+                lines;
+            console.log(type);
+            if (type == "lines") {
+                lines = processAsLines(data);
+            } else if (type == "polygons") {
+                lines = processAsPolygons(data);
+            }
+            console.log(lines);
+            var map = L.map('map{{.Get "id"}}').setView([{{.Get "lat"}}, {{.Get "lon"}}], {{.Get "z"}}),
+                style;
+            L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png").addTo(map);
+            {{ if .Get "dataStyle" }}
+                style = JSON.parse({{.Get "dataStyle"}});
+            {{ else }}
+                style = {weight:0.3, color:"black"}
+            {{ end }}
+
+            L.geoJson(turf.featureCollection(lines), {style:style}).addTo(map);
+
+            map.attributionControl.addAttribution(
+                'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+            );
+            {{ if .Get "dataAttribution" }}
+                map.attributionControl.addAttribution(
+                    '<br>Heatmap data: {{.Get "dataAttribution"}}'
+                );
+            {{ end }}
+        });
+</script>
+
+{{end}}
