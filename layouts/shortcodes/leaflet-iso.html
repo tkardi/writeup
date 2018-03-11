@@ -1,0 +1,84 @@
+{{if .IsNamedParams}}
+<style>
+    /* override these for one-two-three theme*/
+    .leaflet-control a::after {
+        content:none;
+    }
+    .leaflet-control a:hover {
+        border-radius:0px;
+    }
+</style>
+
+<div id='map{{.Get "id"}}' style='width:{{.Get "width"}};height:{{.Get "height"}};'></div>
+<script>
+    var getColorAndOpacity = function(value) {
+        var colorAndOp;
+        {{ if .Get "dataStyle" }}
+            colorAndOp = JSON.parse({{.Get "dataStyle"}}) ;
+        {{ else }}
+            colorAndOp = {};
+        {{ end }}
+
+        return colorAndOp[value] || ['black', 0.5];
+    }
+
+    var style = function(feature) {
+        var colorOp = getColorAndOpacity(feature.properties[{{.Get "dataKey"}}]);
+        return {
+            fillColor: colorOp[0],
+            weight: 0.3,
+            opacity: colorOp[1],
+            color: 'white',
+            fillOpacity: colorOp[1]
+        };
+    }
+
+    fetch({{.Get "dataURL"}})
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            var key = {{.Get "dataKey"}},
+                breaks = JSON.parse({{.Get "dataBreaks"}}) || [0,1,10,100,1000,10000],
+                features = data.features.filter(function(feature) {
+                    return feature.properties[key] > 0;
+                }),
+                zeros = turf.getCluster(data, {nox:0}),
+                l = zeros.features.length,
+                numFeatures = features.length;
+
+            for (var i=0;i<numFeatures;i++) {
+                var j = parseInt(i*l/numFeatures);
+                features.push(zeros.features[j]);
+            };
+
+            var iso, type = {{.Get "type"}} || 'isobands',
+                grid = turf.interpolate(
+                turf.featureCollection(features),
+                3500,
+                {gridType:'point', units:'meters', property:key, weight:10});
+
+            if (type == 'isobands') {
+                iso = turf.isobands(grid, breaks, {zProperty:key});
+            } else {
+                iso = turf.isobands(grid, breaks, {zProperty:key});
+            }
+
+            var map = L.map('map{{.Get "id"}}').setView([{{.Get "lat"}}, {{.Get "lon"}}], {{.Get "z"}}),
+                gradient;
+            L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png").addTo(map);
+
+            L.geoJson(iso, {style:style}).addTo(map);
+
+            map.attributionControl.addAttribution(
+                'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+            );
+            {{ if .Get "dataAttribution" }}
+                map.attributionControl.addAttribution(
+                    '<br>Heatmap data: {{.Get "dataAttribution"}}'
+                );
+            {{ end }}
+        });
+</script>
+
+{{end}}

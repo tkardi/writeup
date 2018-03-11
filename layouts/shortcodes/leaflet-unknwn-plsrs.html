@@ -107,13 +107,13 @@
         .then(function(data) {
             var type = {{.Get "type"}} || "lines",
                 lines;
-            console.log(type);
+
             if (type == "lines") {
                 lines = processAsLines(data);
             } else if (type == "polygons") {
                 lines = processAsPolygons(data);
             }
-            console.log(lines);
+
             var map = L.map('map{{.Get "id"}}').setView([{{.Get "lat"}}, {{.Get "lon"}}], {{.Get "z"}}),
                 style;
             L.tileLayer("https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png").addTo(map);

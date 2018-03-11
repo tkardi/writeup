@@ -57,9 +57,9 @@ by
 
 {{< highlight javascript >}}
 var features = [];
-// @param data is our GeoJSON FeatureCollection variable
-// @param key is the property name we need to count
-// @param minValue is for disgarding background data
+// @param data: is our GeoJSON FeatureCollection variable
+// @param key: is the property name we need to count
+// @param minValue: is for discarding background data
 data.features.filter(function(feature) {
         return feature.geometry.type == 'Point' &&
             feature.properties[key] >= minValue;
@@ -128,7 +128,65 @@ Me: Ok. I get it - 90K points is way too much in one go.
 So the options here would be to either a) prepare the data already offline, or
 b) do the processing in smaller chunks.
 
-_to be continued still with examples_
+As I'm not really interested in any preprocessing server-side because that
+would take away the fun of javascripting. So lets give it a go with the
+smaller chunks workaround.
+
+Everything seems to work out fine performance-wise as long as the number of
+points to be interpolated is kept around a few thousand tops and the resolution
+of the output grid is not too dense. I found it useful to start with  sparser
+grids (say 50km resolution considering the spatial extent of Estonia ;)) and
+then decreasing it to see at what size the waiting time becomes unbearable or
+browser crash may occur.
+
+A few scenarios were tested how to go about this, but the main problem with
+all of them was that as soon as the 0-values were left out (and for the NOx
+dataset these make up around 90% of the data) the output isolines lost all
+connection with the real situation - literally the whole country seemed to be
+very highly polluted with &lt;insert the pollutant name you're mapping&gt;.
+
+In the end as a final grasp just before calling it quits, I decided to try to
+(automatically) _cherry pick_ points to represent the 0-values. As these could
+be considered as the background values, it seemed plausible to go with for
+example: "lets use 1000 points out of `n` total, so give me every `n/1000`th
+point" (NB! this dataset is spatially ordered). Something in the lines of:
+
+{{< highlight javascript >}}
+// @param data: is our GeoJSON FeatureCollection variable
+// @param key: is the property name we are mapping
+// @param numZeros: is the number of zeros we want to retain
+var fc = data.features.filter(function(feature) {
+        return feature.properties[key] > 0}
+    ),
+    zeros = turf.getCluster(data, {key: 0}),
+    l = zeros.features.length;
+
+for (var i=0;i<numZeros;i++) {
+    var j = parseInt(i*l/numZeros);
+    fc.push(zeros.features[j]);
+}
+{{< / highlight >}}
+
+Add some value-based styling using a function, and the result we get looks like
+this using 2.5K _zero-values_:
+
+{{< leaflet-iso
+    id="5"
+    height="350px" width="100%"
+    lon="24.905" lat="58.681"
+    z="6"
+    dataURL="../nox.geojson"
+    dataKey="nox"
+    dataBreaks="[-1, 0, 0.1, 1, 10, 100, 1000, 10000]"
+    dataStyle="{\"1000-10000\":[\"#800026\",0.8],\"100-1000\":[\"#BD0026\",0.8],\"10-100\":[\"#FC4E2A\",0.8],\"1-10\":[\"#FEB24C\",0.8],\"0.1-1\":[\"#FFEDA0\",0.8],\"0-0.1\":[\"white\",0.0],\"-1-0\":[\"white\",0.0]}"
+    dataAttribution=""
+    >}}
+
+There is some inherent spatial bias in this representation. Remember, the
+background zero-values were picked out based on their order in the dataset.
+Which means that larger areas with `> 0` values will less likely have
+background zeros present. A better solution here is needed but it will have
+to be another day to try this out.
 
 ## Density lines?
 
@@ -309,4 +367,8 @@ It would be cool to have the gradient map to an actual value here, but currently
 this is out of the scope for this writeup.
 
 ## Thank you
-Leaflet, Turf and Heatmap libraries for a crash course in javascript.
+Leaflet, Turf and Heatmap libraries (+ maintainers) for a crash course in
+JavaScript. :)
+
+The source of this writeup is available at https://github.com/tkardi/writeup if
+you're interested.
