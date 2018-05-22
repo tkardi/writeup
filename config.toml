@@ -1,4 +1,4 @@
-baseURL = ""
+baseURL = "https://tkardi.ee/writeup"
 languageCode = "et-EE"
 title = "writeups"
 theme = "onetwothree"

@@ -10,7 +10,7 @@ This is a sandbox for checking how things look and feel like.
 
 <a name="testinganchor">
 Here's</a> a silly world map made in QGIS:
-![Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.](/img/maailm_3301.png)
+![Made with Natural Earth. Free vector and raster map data @ naturalearthdata.com.](../img/maailm_3301.png)
 
 If I quoted something, it'd be like this:
 

@@ -56,7 +56,7 @@ data is in the local national coordinate reference system
 
 As of May 2018 Estonia has 4711 A3-level admin units and in their plainest,
 simplest view they look like this:
-![A3 level admin division of Estonia. Data: Estonian Land Board](/img/20180521/ehak-a3.png)
+![A3 level admin division of Estonia. Data: Estonian Land Board](../img/ehak-a3.png)
 
 After importing the settlements' areas data to a PostGIS database, the rest of
 the data processing was conducted there.
@@ -108,7 +108,7 @@ LINESTRING
 But we still have a layer of lines that share space - two neighboring admin-units
 each have their separate borders:
 
-![Admin units' polygon rings as linestrings](/img/20180521/exteriorrings.png)
+![Admin units' polygon rings as linestrings](../img/exteriorrings.png)
 
 To make them _non-repeating_, we'll aggregate all of them together with [st_union](
 https://postgis.net/docs/ST_Union.html) (which might take a while depending on
@@ -116,7 +116,7 @@ the dataset and the processing power of the database) and use
 [st_dump](https://postgis.net/docs/ST_Dump.html) to get a whole bunch of very
 short (2-node) linestrings:
 
-![Noding admin unit polygons](/img/20180521/linesmerged.png)
+![Noding admin unit polygons](../img/linesmerged.png)
 
 The query for this operation is
 
@@ -151,7 +151,7 @@ from (
 
 and voilà:
 
-![Properly noded A3 level admin unit borders](/img/20180521/linesmergedfull.png)
+![Properly noded A3 level admin unit borders](../img/linesmergedfull.png)
 
 ### Step 3.
 
@@ -190,7 +190,7 @@ from ay_lines_merged_full;
 {{</ highlight >}}
 
 If the map is zoomed really close these shifted lines can be distinguished
-![Coastline border shifted left (thick red) and right (hairline green) from its position (hairline violet in the center) by 0.01 m](/img/20180521/shiftedlines.png)
+![Coastline border shifted left (thick red) and right (hairline green) from its position (hairline violet in the center) by 0.01 m](../img/shiftedlines.png)
 
 Next up, add columns to hold the geometry of the midpoints to the shifted lines table
 
@@ -296,7 +296,7 @@ And finally we have a set of _meshed up polygons_ with sidedness information.
 Here's a closer screenshot of how it all looks in `1:1` scale (remember the
 _ridiculously small distance_ that was used for offsets).
 
-![Original border (red) with its attributes displayed and lines shifted left (blue) and right (green) and their midpoints with A3 unit id values for labels.](/img/20180521/sidedness.png)
+![Original border (red) with its attributes displayed and lines shifted left (blue) and right (green) and their midpoints with A3 unit id values for labels.](../img/sidedness.png)
 
 
 And that's it. So now for example, if we needed all the borders in between A3
@@ -308,7 +308,7 @@ left_a3 is not null and right_a3 is not null
 
 will produce a layer like:
 
-![A3 admin level borders, no coastline, no landborder for country](/img/20180521/wo-coastline.png)
+![A3 admin level borders, no coastline, no landborder for country](../img/wo-coastline.png)
 
 And if A2 level unit borders are needed the same way, we can simply issue another
 filter
@@ -319,7 +319,7 @@ left_a2 is not null and right_a2 is not null and left_a2 != right_a2
 
 resulting in
 
-![A2 admin level borders, no coastline, no landborder for country](/img/20180521/wo-coastline-a2.png)
+![A2 admin level borders, no coastline, no landborder for country](../img/wo-coastline-a2.png)
 
 just remember that the linestrings here for A2 are still per neighboring A3
 units. To get them per neighboring A2 units simply merge them.

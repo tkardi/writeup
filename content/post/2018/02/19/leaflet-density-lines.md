@@ -107,13 +107,13 @@ turf-isolines: Your data should be a point grid.
 
 Me: Cool. I have that. I'll just transform it to WGS'84 geographical coordinates.
 
-![1km*1km point grid in L-EST'97](/img/20180219/km_grid_3301.png)
+![1km*1km point grid in L-EST'97](../img/km_grid_3301.png)
 
 < transforms data >
 
 Me: Here you go ...
 
-![1km*1km point grid in WGS84](/img/20180219/km_grid_4326.png)
+![1km*1km point grid in WGS84](../img/km_grid_4326.png)
 
 turf-isolines: Errr... right, this should've been an equirectangular point grid
 in geographic coordinates.
