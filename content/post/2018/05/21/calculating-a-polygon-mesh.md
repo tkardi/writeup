@@ -4,9 +4,11 @@ date: 2018-05-21T12:58:30+02:00
 draft: false
 ---
 
-Note: I really don't know how this kind of "network" of polygon-borders-as-lines
-is called, but I'll refer to it as a "polygon mesh". Maybe it's correct, maybe
-not. If you happen to know, I'd be really glad if you let me know :)
+Note: I really don't know how this kind of noded "network" of
+polygon-borders-as-lines is called in English, but I'll refer to them as a
+"meshed up polygons". Most probably because it sounds like _messed up_ if
+you don't get your pronunciation right. Maybe it's correct, maybe not. If
+you happen to know, I'd be really glad if you let me know :)
 
 Anyway. The story goes like this.
 
@@ -16,8 +18,8 @@ Estonia has a relatively long coastline compared to it's size (
 [~3800 km vs 45K sq km](https://en.wikipedia.org/wiki/Geography_of_Estonia)),
 in addition a ton of smaller islands, and a couple of bigger lakes, so
 when it comes to vector data of administrative boundaries these will have quite
-some nodes. I guess the situation is even worse for other Nordic countries, but
-that's not what this writeup is about...
+some nodes. I guess the situation is even worse for other Nordic countries or
+really any other sea-side country, but that's not what this writeup is about...
 
 A few weeks ago I stumbled upon a case where we needed the lowest level
 administrative unit borders to be rendered as vectors on an OpenLayers powered
@@ -34,9 +36,10 @@ technique used in chartography, so nothing novel actually. But thinking back,
 I had not done this kind of processing myself before.
 
 For that to happen we'd have to do two things:
-a) mesh up the admin unit polygons
-b) add two additional attributes two all mesh linestrings denoting the admin
-unit id to the left and to the right of the vector.
+1. node (or _mesh up_) the admin unit polygons
+2. add two additional attributes two all noded linestrings denoting the admin
+unit id to the left and to the right of the vector. Something that's usually
+done in topological datasets (e.g routing networks).
 
 ## Data
 
@@ -55,25 +58,26 @@ As of May 2018 Estonia has 4711 A3-level admin units and in their plainest,
 simplest view they look like this:
 ![A3 level admin division of Estonia. Data: Estonian Land Board](/img/20180521/ehak-a3.png)
 
-I imported the settlements' areas data to a PostGIS database, and the rest of
+After importing the settlements' areas data to a PostGIS database, the rest of
 the data processing was conducted there.
 
 ## Processing
 
 The data processing was divided into a series of steps consisting of
 
-1. polygons to linestings, removing duplicates
+1. polygons to linestings, removing duplicate borders
 2. merging all linestrings into a fully noded layer, forming a "mesh"
-3. calculating sidedness - add left and right side A3-level unit identificators
+3. and calculating sidedness - add left and right side A3-level unit identifiers
+to linestrings.
 
 Most of this processing can be squeezed together into single statements but I'll
-try to chop it up into smaller chunks that can be marvelled at in your
-favorite desktop GIS aswell.
+try to chop it up into smaller chunks results of which can be marvelled at in
+your favorite desktop GIS aswell.
 
 ### Step 1.
 
 First off we'll dump all polygon rings and select their outer shells. There's no
-point in keeping the identificators (`akood`, `okood`, `mkood` for A3, A2 and A1
+point in keeping the identifiers (`akood`, `okood`, `mkood` for A3, A2 and A1
 admin levels respectively) because the geometries will be merged at some later
 point anyway and lost.
 
@@ -130,7 +134,8 @@ Now we'll use [st_linemerge](https://postgis.net/docs/ST_LineMerge.html)
 to sow these linestrings together, seeding it with a multilinestring of all lines
 created with [st_collect](https://postgis.net/docs/ST_Collect.html), and again
 [st_dump](https://postgis.net/docs/ST_Dump.html) them to singlepart linestrings
-that are now properly noded
+that are now properly noded - you can think of this as a road network with
+all the roads split at intersections.
 
 {{< highlight sql >}}
 drop table if exists ay_lines_merged_full;
@@ -147,24 +152,28 @@ from (
 and voilà:
 
 ![Properly noded A3 level admin unit borders](/img/20180521/linesmergedfull.png)
+
 ### Step 3.
 
 If we were only interested in a mesh of line geometries then the task would be
 complete, but what we're really after is finding those borders that are not
-shared between two adjacent administrative units. Therefore we still need to
-calculate sidedness information.
+shared between two adjacent administrative units. Basically filtering out those
+that have coastline (or country border on the land) on one side and an admin
+unit on the other. Therefore we still need to calculate sidedness information.
 
-This can be achieved for example by shifting out calculated linestrings left
+This can be achieved for example by shifting the noded linestrings left
 and right by a ridiculously small distance using
 [st_offsetcurve](https://postgis.net/docs/ST_OffsetCurve.html),
 finding a midpoint of the shifted line with
 [st_lineinterpolatepoint](https://postgis.net/docs/ST_LineInterpolatePoint.html)
 and then simply querying then admin unit that this midpoint is within with
 [st_within](https://postgis.net/docs/ST_Within.html). The "ridiculously small
-distance" mentioned earlier is 0.01 meters. Also note the use of
+distance" mentioned earlier is 0.01 meters. This distance needs to be kept at a
+minimum because otherwise the point geometry we construct from it afterwards
+might end up in a completely wrong place. Also note the use of
 [st_dump](https://postgis.net/docs/ST_Dump.html) again as offsetting
-self-touching linestrings (e.g islands) left/right can create self-intersections
-and therefore multitype geometries or other oddities.
+self-touching linestrings (for example: islands) left/right can create
+self-intersecting lines and therefore multitype geometries or other oddities.
 
 {{< highlight sql >}}
 drop table if exists ay_lines_shift_left;
@@ -180,10 +189,10 @@ select id, (st_dump(st_offsetcurve(geom, -0.01))).geom as geom
 from ay_lines_merged_full;
 {{</ highlight >}}
 
-If the map is zoomed really close the shifted lines can be distinguished
-![Coastline border shifted left (thick red) and right (hairline green) from its position (hairline violet) by 0.01 m](/img/20180521/shiftedlines.png)
+If the map is zoomed really close these shifted lines can be distinguished
+![Coastline border shifted left (thick red) and right (hairline green) from its position (hairline violet in the center) by 0.01 m](/img/20180521/shiftedlines.png)
 
-Add columns to hold the geometry of the midpoints to the shifted lines table
+Next up, add columns to hold the geometry of the midpoints to the shifted lines table
 
 {{< highlight sql >}}
 alter table ay_lines_shift_left add column midpoint geometry(Point, 3301);
@@ -192,8 +201,10 @@ alter table ay_lines_shift_right add column midpoint geometry(Point, 3301);
 
 Calculate midpoint values based on [st_lineinterpolatepoint](
 https://postgis.net/docs/ST_LineInterpolatePoint.html). This is the preferred
-way - instead of using [st_centroid](https://postgis.net/docs/ST_Centroid.html)
-which can have inadvertent consequences.
+way to, for example using [st_centroid](https://postgis.net/docs/ST_Centroid.html)
+which can have inadvertent consequences. A centroid of the geometry is not
+guaranteed to intersect the geometry it represents, it's just a "center of mass
+of the geometry"
 
 {{< highlight sql >}}
 update ay_lines_shift_left set
@@ -203,7 +214,7 @@ update ay_lines_shift_right set
     midpoint = st_lineinterpolatepoint(geom, 0.5);
 {{</ highlight >}}
 
-And now simply create the appropriate left/right columns to be filled.
+And now simply create the appropriate left/right columns to be populated.
 
 {{< highlight sql >}}
 alter table ay_lines_shift_left add column a3_id varchar(4);
@@ -219,7 +230,7 @@ create index sidx__ay_lines_shift_right__midpoint
     on ay_lines_shift_right using gist (midpoint);
 {{</ highlight >}}
 
-And update
+And update A3 level identifiers left and right
 
 {{< highlight sql >}}
 update ay_lines_shift_left set
@@ -233,9 +244,10 @@ from asustusyksus ay
 where st_within(ay_lines_shift_right.midpoint, ay.shape);
 {{</ highlight >}}
 
-To transfer the left/right A3 unit id values to the noded layer add some columns
-yet again (and while we're at it, lets add the A2 and A1 unit identifiers
-aswell):
+To transfer the left/right A3 unit id values to the previously noded layer
+add some columns yet again (and while we're at it, lets add the A2 and A1
+unit identifiers aswell):
+
 {{< highlight sql >}}
 alter table ay_lines_merged_full add column left_a3 varchar(4);
 alter table ay_lines_merged_full add column right_a3 varchar(4);
@@ -280,9 +292,9 @@ from (select distinct akood, mkood from ay) mk
 where mk.akood = ay_lines_merged_full.right_a3;
 {{</ highlight >}}
 
-And finally we have a polygon mesh with sidedness information. Here's a closer
-sccreenshot of how it all looks in `1:1` scale (remember the _ridiculously small
-distance_ that was used for offsets).
+And finally we have a set of _meshed up polygons_ with sidedness information.
+Here's a closer screenshot of how it all looks in `1:1` scale (remember the
+_ridiculously small distance_ that was used for offsets).
 
 ![Original border (red) with its attributes displayed and lines shifted left (blue) and right (green) and their midpoints with A3 unit id values for labels.](/img/20180521/sidedness.png)
 
@@ -314,9 +326,11 @@ units. To get them per neighboring A2 units simply merge them.
 
 ## All-in-alls...
 
-If you ever stumbled upon this writeup then I hope this was helpful (if help was
-what you were looking for :)). Most probably there are other ways of achieving
-the same result but this worked for me just fine. The whole sql file is
-available as a gist [here](
-https://gist.github.com/tkardi/4d09093ec823ee44c5f35c56ae223406). If you have
-any further questions or comments then please feel free to drop me a note.
+If you ever stumbled upon this writeup and made it here then thank you
+for bearing till the end. I hope this was helpful (if help was what you were
+looking for :)). There are other ways of achieving the same result but this
+worked for me just fine. The whole SQL statements file is available as a gist
+[here](https://gist.github.com/tkardi/4d09093ec823ee44c5f35c56ae223406).
+
+If you have any further questions or comments then please feel free to drop
+me a note.
