@@ -26,7 +26,7 @@
         var colorOp = getColorAndOpacity(feature.properties[{{.Get "dataKey"}}]);
         return {
             fillColor: colorOp[0],
-            weight: 0.3,
+            weight: 0.1,
             opacity: colorOp[1],
             color: 'white',
             fillOpacity: colorOp[1]
@@ -55,8 +55,8 @@
             var iso, type = {{.Get "type"}} || 'isobands',
                 grid = turf.interpolate(
                 turf.featureCollection(features),
-                3500,
-                {gridType:'point', units:'meters', property:key, weight:10});
+                7500,
+                {gridType:'point', units:'meters', property:key, weight:1.25});
 
             if (type == 'isobands') {
                 iso = turf.isobands(grid, breaks, {zProperty:key});

@@ -329,8 +329,11 @@ units. To get them per neighboring A2 units simply merge them.
 If you ever stumbled upon this writeup and made it here then thank you
 for bearing till the end. I hope this was helpful (if help was what you were
 looking for :)). There are other ways of achieving the same result but this
-worked for me just fine. The whole SQL statements file is available as a gist
-[here](https://gist.github.com/tkardi/4d09093ec823ee44c5f35c56ae223406).
+worked for me just fine. This writeup is licensed under
+*[CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/): Tõnis Kärdi (LonLat
+OÜ)*. Except for the SQL code which is licensed under
+*[the Unlicense](http://unlicense.org/)*, and is available as a gist
+[here](https://gist.github.com/tkardi/4d09093ec823ee44c5f35c56ae223406) .
 
 If you have any further questions or comments then please feel free to drop
 me a note.
