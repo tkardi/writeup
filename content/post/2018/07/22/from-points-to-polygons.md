@@ -21,17 +21,19 @@ In the following writeup I will cover the process of creating _nice_ zip code
 areas based on streets, rivers, settlement polygons, cadastral parcel data, and
 addresspoints with zip codes assigned. Basically the presented method could
 be used in different cases when point data needs to be _polygonized_ in a way
-that takes into account natural phenomena.
+that takes into account natural or humanmade (linear) phenomena.
 
 It's still a very much work in progress and I'm mostly writing this down as a
 way to document it for myself. If you find it useful or interesting or have
 suggestions then feel free to ping me.
 
 ## Input data
-Settlement level admin units that are "stretched out" to the sea (self-made)
-Streets data from the Estonian Land Board's homepage
-Cadastral parcels from the Estonian Land Board's homepage
-River centerlines from the Ministry of Environment's open access WFS
+- Settlement level admin units that are "stretched out" to the sea (self-made).
+See [subdividing space](../../../07/21/subdividing-space/) for a discussion
+how it could be done.
+- Streets data from the Estonian Land Board's homepage
+- Cadastral parcels from the Estonian Land Board's homepage
+- River centerlines from the Ministry of Environment's open access WFS service
 
 ## Processing
-Data processing steps..
+As a first step we'd have to create some meaningful
