@@ -37,8 +37,8 @@ After initially abandoning this post I saw a tweet by @tjukanov
 
 --embed
 
-and was intrigued to still finish this although most probably it will be a great
-mess and very hard to understand.
+and was intrigued to still get it finished because there is some similarity
+between these tasks of creating areal data out of point-based data.
 
 ## Input data
 
@@ -176,6 +176,9 @@ to keep some context with the data, refer to them as `quartiers`. It would be
 advisable to topo-check this layer aswell with something like GRASS'
 [`v.clean`](https://grass.osgeo.org/grass77/manuals/v.clean.html) for example.
 
+Still. The good thing now is that any point data you have and need to
+turn into polygons can be done based on this same set of `quartiers`.
+
 ### Classifying the quartiers
 
-### Diving deeper width cadastral parcels
+### Diving deeper with cadastral parcels
