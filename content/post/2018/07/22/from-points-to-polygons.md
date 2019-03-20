@@ -180,5 +180,235 @@ Still. The good thing now is that any point data you have and need to
 turn into polygons can be done based on this same set of `quartiers`.
 
 ### Classifying the quartiers
+Now with zipcodes the first thing we'll check is whether all address points
+in a settlement (that is unit identified by `akood`) have the same zip. With
+this we'll have a pretty good amount of `quartiers` already settled.
 
-### Diving deeper with cadastral parcels
+{{< highlight sql >}}
+-- create table listing all possible combinations
+-- of adminunits-to-zipcodes
+drop table if exists distinct_zip;
+create table distinct_zip as
+select
+    distinct mkood as a1, okood as a2, akood as a3,
+    postiindeks as zip
+from addrespoint;
+
+-- keeping track which quartier has a zip assigned
+alter table noise_merged add column got_zip boolean;
+
+-- and make a new table based on those settlements
+-- that only have one zip code
+drop table if exists zip_areas;
+create table zip_areas as
+select
+    d.a1, d.a2, d.a3, d.zips[1] as zip, nmt.gid as nm_gid,
+    nmt.geom
+from (
+    select
+        a1, a2, a3, array_agg(zip) as zips,
+        count(1) as zip_count
+    from distinct_zip
+    group by a1, a2, a3
+    having count(1) = 1
+    order by a1, a2, a3
+) d, noise_merged nmt
+where nmt.akood = d.a3;
+
+-- mark these quartiers as used
+update noise_merged set
+    gotzip = true
+from zip_areas
+where zip_areas.nm_gid = noise_merged.gid;
+{{</ highlight >}}
+
+Next up get all overleft quartiers which have only one zipcode available (
+through e.g. `st_within` spatial relation). Precalculate distincts
+
+{{< highlight sql >}}
+drop table if exists distinct_zip_noise;
+create table distinct_zip_noise as
+select gid, a3, array_agg(zip) as zips, count(1) as zip_count
+from (
+    select nmt.gid, nmt.akood as a3, pa.postiindeks as zip
+    from noise_merged nmt, addresspoint pa
+    where st_within(pa.geom, nmt.geom)
+    and nmt.gotzip is null
+    group by nmt.gid, nmt.akood, pa.postiindeks
+) foo
+group by gid, a3;
+{{</ highlight >}}
+
+And now add some more `quartiers` as zip areas
+
+{{< highlight sql >}}
+insert into zip_areas (
+    a1, a2, a3,
+    zip, nm_gid, geom
+)
+select
+    ay.mkood as a1, ay.okood as a2, ay.akood as a3,
+    d.zips[1] as zip, nmt.gid as nm_gid, nmt.geom
+from (
+    select
+        n.gid, n.a3, n.zips
+    from zip.pa_distinct_zip_noise n
+    where zip_count = 1
+) d, zip.noise_merged_test nmt, (
+    select
+        distinct akood, okood, mkood
+    from asustusyksus) ay
+where nmt.gid = d.gid and d.a3 = ay.akood and nmt.gotzip is null;
+
+update noise_merged set
+    gotzip = true
+from zip_areas
+where zip_areas.nm_gid = noise_merged.gid and
+noise_merged_test.gotzip is null;
+{{</ highlight >}}
+
+Now looking at the layer we can see, that tgere area still quite many
+unclassified quartiers - part of them is missing and addresspoint within
+them, and the other part has more than one zip.
+
+![Quartiers with unique zips colored by zip code](../img/unique-by-zip.png)
+
+With the first part (no addrespoint) we cannot do anything much right now. But
+if there are more than one distinct zip codes present with addresspoints in the
+`quartier`, then we could either divide the quartier through voronoi polygons,
+or use some inner-`quartier` features, e.g. cadastral parcels.
+
+### Dividing some more with cadastral parcels
+Luckily, the Estonian Land Board has made cadastral parcel data opendata with
+a permissive licence so you can freely download it and use it. So as before
+we'll start by selecting only tose parcels that have address points with one
+distinct zip only.
+
+{{< highlight sql >}}
+drop table if exists parcel_noise;
+create table parcel_noise as
+select
+    *
+from (
+    select
+        k.gid, nmt.gid as nm_gid, k.geom as geom
+    from parcel k, noise_merged nmt
+    where
+        st_intersects(k.geom, nmt.geom) and
+        st_touches(k.geom, nmt.geom) = false and
+        nmt.gotzip is null
+) foo
+where geometrytype(geom) = 'POLYGON';
+
+alter table parcel_noise add column oid serial;
+alter table parcel_noise add constraint pk__kataster_noise primary key (oid);
+create index sidx__parcel_noise on zip.parcel_noise using gist (geom);
+{{</ highlight >}}
+
+which outputs a layer like
+
+![Parcels split by quartiers](../img/parcel-noise-2x.png)
+
+Let's record the distinct zipcodes available in these "parcels split by
+`quartiers`"
+
+{{< highlight sql >}}
+alter table parcel_noise add column zips varchar[];
+
+update parcel_noise set
+    zips = n.zips
+from (
+    select
+        kn.oid, array_agg(distinct pa.postiindeks) as zips
+    from parcel_noise kn, addresspoint pa
+    where st_within(pa.geom, kn.geom)
+    group by kn.oid
+) n
+where n.oid = parcel_noise.oid;
+{{</ highlight >}}
+
+Now taking out first those that have have only one distinct zip present
+
+{{< highlight sql >}}
+drop table if exists zip.parcel_noise_pazip;
+create table zip.parcel_noise_pazip as
+select
+    array_agg(kn.oid) as kn_oid, kn.nm_gid, kn.pa_zips[1] as zips,
+    st_union(kn.geom) as geom
+from parcel_noise kn
+where array_length(kn.pa_zips, 1) = 1
+group by kn.nm_gid, kn.zips;
+{{</ highlight >}}
+
+Those parcels that have more than one distinct zip present could be then further
+divided based on something. For this layer's creation we decided to keep
+a comma-separated list of zips for these parcels to be further refined later on
+case-by-case by a specialist.
+
+{{< highlight sql >}}
+drop table if exists zip.parcel_noise_zip;
+create table zip.parcel_noise_zip as
+select n.*
+from (
+    select
+        bar.knoid, bar.nm_gid, zip, (st_dump(
+            st_intersection(bar.geom, nmt.geom)
+        )).geom as geom
+    from (
+        select
+            array_agg(knoid) as knoid, nm_gid, zip,
+            st_union(geom) as geom
+        from (
+            select
+                n.knoid, kn.nm_gid, kn.geom as geom,
+                array_to_string(kn.zips,',') as zip
+            from (  
+                select
+                    unnest(array_agg) as knoid
+                from zip.parcel_noise_pazip
+                union
+                select
+                    oid
+                from zip.parcel_noise
+                where array_length(zips, 1) > 1
+            ) n, zip.parcel_noise kn
+            where kn.oid = n.knoid
+        ) foo
+        group by nm_gid, zip
+    ) bar, zip.noise_merged nmt
+    where bar.nm_gid = nmt.gid
+) n
+where geometrytype(geom) = 'POLYGON';
+
+alter table zip.parcel_noise_zip add column oid serial;
+alter table zip.parcel_noise_zip add constraint pk__parcel_noise_zip primary key (oid);
+{{</ highlight >}}
+
+Remove all parcels from this game that don't have an addresspoint
+
+{{< highlight sql >}}
+alter table zip.parcel_noise_zip add column has_ap boolean;
+
+update zip.parcel_noise_zip set
+    has_ap = true
+from zip.addrespoint
+where st_within(addresspoint.geom, parcel_noise_zip.geom);
+
+delete from zip.parcel_noise_zip where has_ap is null;
+{{</ highlight >}}
+
+And then marvel at the output.
+
+![Parcels colored by their associated zip code](../img/parcel-noise-zip-2x.png)
+
+And if we add the already classified areas to the map:
+
+![Parcels, settlement and quartier-based zip areas colored by their associated zip code](../img/parcel-noise-zip-plus-2x.png)
+
+So there are still gaps in between the classified areas. One way to overcome
+this is by dividing the space within a quartier between the parcels that are
+there already. The steps of the process are the same as described in
+[this post](../../21/subdividing-space/) so I wont go into any details with that
+here. We'll pick up where we're finished with the area subdivision
+
+![Enlarged parcel, settlement and quartier-based zip areas colored by their associated zip code](../img/parcel-noise-zip-plus-2x.png)
