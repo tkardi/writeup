@@ -67,7 +67,7 @@ have an (let alone simple) answer.
 Thank you, I learnt how to use looping in PostgreSQL queries :)
 
 The grayscale basemap used in some of the screenshots below
-is from the [Estonian Ministry of the Environment's WMS service] https://gsavalik.envir.ee/geoserver/baasandmed/ows?service=WMS&version=1.3.0&request=GetCapabilities
+is from the [Estonian Ministry of the Environment's WMS service]( https://gsavalik.envir.ee/geoserver/baasandmed/ows?service=WMS&version=1.3.0&request=GetCapabilities)
 
 The other basemap used is by the [Estonian Land Board](https://kaart.maaamet.ee/wms/kaart?service=WMS&version=1.3.0&request=GetCapabilities)
 
