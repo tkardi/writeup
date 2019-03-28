@@ -36,22 +36,20 @@ I'm mostly writing this down as a way to document it for myself. If you find
 it useful or interesting or have suggestions then feel free to ping me.
 
 ### Addendum 19.03.2019
-{{< tweet 1107543990432342016 >}}
 
-Initially I abandoned this post because it seemed too complicated to
-pin it down as a step-by-step process, I saw this tweet by Topi Tjukanov
-and was intrigued to still get it finished because there is some similarity
+
+After having initially abandoned writing this post because it seemed too
+complicated to pin it down as a step-by-step process, I saw this tweet by Topi Tjukanov
+and was intrigued to still get it finished because there seemed to be some similarity
 between these tasks of creating areal data out of point-based data.
 
-What follows is to a great part the result of a trial and error, best hopes,
+What follows is to a great part the result of trial and error, best hopes,
 guesses and countless cups of coffee, back-to-the-drawingboard types of
 situations. At some points in the following text the SQL queries will be
-overtly overcomplicated and most probably it can (and should) be written
-more consistently. But maybe some other time. Because at the time of doing
-it, it was rather hard keeping track what had been tried and tested and
-what didn't work.
+overtly overcomplicated and most probably they can (and should) be written
+more consistently. But maybe some other time.
 
-Anyway. Don't expect too much clarity... Don't expect to get your data and
+Anyway. Don't expect too much clarity... Don't expect to take your data
 and simply run the queries and get the expected result (though, the general
 idea of the whole flow should still be valid).
 
@@ -115,7 +113,7 @@ And if we polygonize it, it will be your typical polygons
 There are different possibilities for doing this but PostGIS is a
 really powerful tool for dataprocessing like this. The following SQL uses a
 loop to process the data one settlement (identified by `akood` value) at a time.
-`noise` will our linestring features table and `asustusyksus` where the
+`noise` is our linestring features table and `asustusyksus` where the
 settlements are. The input data looks like this
 
 ![`Noise` and settlement areas](../img/noise-plus-settlements.png)
@@ -224,7 +222,7 @@ and closeup
 ![`Noise` and settlement area boundaries polygonized (closeup)](../img/noise-merged-2x.png)
 
 These form the basis for the classification we'll uptake next, and therefore
-to keep some context with the data, refer to them as `quartiers`. It would be
+to keep some context with the data, lets refer to them as `quartiers`. It would be
 advisable to topo-check this layer aswell with something like GRASS'
 [`v.clean`](https://grass.osgeo.org/grass77/manuals/v.clean.html) for example.
 
@@ -381,7 +379,7 @@ from (
 where n.oid = parcel_noise.oid;
 {{</ highlight >}}
 
-Now taking out first those that have have only one distinct zip present
+Now taking out first those that have only one distinct zip present
 
 {{< highlight sql >}}
 drop table if exists zip.parcel_noise_pazip;
