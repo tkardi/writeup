@@ -1,5 +1,5 @@
 ---
-title: "Building a flighradar in Leaflet (part I)"
+title: "Building a flightradar in Leaflet (part I)"
 date: 2019-04-27T04:42:00+02:00
 draft: false
 ---
@@ -140,12 +140,12 @@ In your favourite text-editor:
             // Stamen's Toner basemap
             L.tileLayer(
                 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-                    attribution: 'Map tiles by <a href="http://stamen.com">
-                        Stamen Design</a>, under
-                        <a href="http://creativecommons.org/licenses/by/3.0">
-                        CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">
-                        OpenStreetMap</a>, under
-                        <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+                    attribution: 'Map tiles by <a href="http://stamen.com">' +
+                        'Stamen Design</a>, under' +
+                        '<a href="http://creativecommons.org/licenses/by/3.0">' +
+                        'CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">' +
+                        'OpenStreetMap</a>, under' +
+                        '<a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
             }).addTo(map);
         </script>
     </body>
@@ -241,7 +241,8 @@ pass.
 
 {{< leaflet-realtime
     id="1"
-    height="350px" width="100%" >}}
+    height="350px" width="100%"
+    realtimeURL="https://tkardi.ee/current/flightradar/?format=json" >}}
 
 All the mouseover events with tooltips opening and closing are done
 automatically so this will give more time and space to play around with other
@@ -260,7 +261,8 @@ https://i.giphy.com/media/ki1rmMhjvLlm/giphy.webp)
 
 For that we'll need to set up a polar graticule and a 360-degrees revolving
 line, and find a way to animate the aeroplane markers in order to simulate the
-look of a real radar. But I'll discuss that in the next writeup. The full
+look of a real radar. But I'll discuss that in the
+[next writeup](../../30/building-a-totally-useless-map-ii/). The full
 working code for `flightradar.html` as well as `proxy.py` and `flaskapp.py`
 can be found in [this gist](
 https://gist.github.com/tkardi/f9cc6199713adf14f8525ec4494b6710).
