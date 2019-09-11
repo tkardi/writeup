@@ -4,6 +4,10 @@ date: 2018-05-22T12:34:50+02:00
 draft: false
 ---
 
+<img
+    align="left"
+    src="/writeup/img/misc/tkardi.jpg"
+    style="padding-right: 15px; width: 25%">
 Hi there, I'm Tõnis Kärdi. I occupy myself as a _freelance-GIS-person_ using
 the name LonLat OÜ. Most often you'll find me offering my services under the
 auspices of [UEC OÜ](http://uec.ee/) to bring you spatial awareness in IT
