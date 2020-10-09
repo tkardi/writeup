@@ -2,6 +2,7 @@
 title: "Lofting preparations"
 date: 2020-09-27T08:08:58+02:00
 description: "Preparing to lay down the boat plans as a full-size drawing."
+og_image: "../boat/thumbs/lofting-preparations.png"
 draft: false
 ---
 

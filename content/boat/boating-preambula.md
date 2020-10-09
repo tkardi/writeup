@@ -2,6 +2,7 @@
 title: "Building a boat again"
 date: 2020-09-07T08:08:58+02:00
 description: "Building a shed to build a boat in."
+og_image: "../boat/thumbs/boating-preambula.png"
 draft: false
 ---
 
