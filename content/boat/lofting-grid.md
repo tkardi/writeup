@@ -1,6 +1,7 @@
 ---
 title: "Lofting grid and so on..."
 date: 2020-10-01T08:08:58+02:00
+description: "Laying down the lofting grid and laying down the lines for profile and half-breadth."
 draft: false
 ---
 

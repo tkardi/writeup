@@ -1,6 +1,7 @@
 ---
 title: "Building a boat again"
 date: 2020-09-07T08:08:58+02:00
+description: "Building a shed to build a boat in."
 draft: false
 ---
 
