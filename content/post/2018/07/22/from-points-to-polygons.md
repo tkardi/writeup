@@ -245,7 +245,7 @@ select
 from zip.addrespoint;
 
 -- keeping track which quartier has a zip assigned
-alter table noise_merged add column got_zip boolean;
+alter table noise_merged add column gotzip boolean;
 
 -- and make a new table based on those settlements
 -- that only have one zip code
@@ -302,9 +302,9 @@ select
 from (
     select
         n.gid, n.a3, n.zips
-    from zip.pa_distinct_zip_noise n
+    from zip.distinct_zip_noise n
     where zip_count = 1
-) d, zip.noise_merged_test nmt, (
+) d, zip.noise_merged nmt, (
     select
         distinct akood, okood, mkood
     from zip.asustusyksus) ay
@@ -315,7 +315,7 @@ update zip.noise_merged set
 from zip.zip_areas
 where
     zip_areas.nm_gid = noise_merged.gid and
-    noise_merged_test.gotzip is null;
+    noise_merged.gotzip is null;
 {{</ highlight >}}
 
 Now looking at the layer we can see, that there are still quite many
