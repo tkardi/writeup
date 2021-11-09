@@ -43,7 +43,7 @@ connect the dots with a straight-edge (no curves necessary).
 The plans I'm using don't specify the actual deck height so for the transom
 curve I decided to go with the classic _4in in 8ft_. But since
 this is currently only a single curve then most probably this might change after
-some more planning and laying out the othe frames. Or maybe not. We'll see.
+some more planning and laying out the other frames. Or maybe not. We'll see.
 Anyway, the transom curve was drawn using the _draughtsman's method_.
 
 With the transom expansion completed, all that's left to do is _the transom

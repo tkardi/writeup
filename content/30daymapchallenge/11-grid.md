@@ -1,0 +1,25 @@
+---
+title: "Day 11: 3d"
+draft: false
+og_image: "../img/30daymapchallenge/thumb.png"
+---
+### Data
+The Estonian Land Board:
+- [topographic database](https://geoportaal.maaamet.ee/eng/Spatial-Data/Estonian-Topographic-Database-p305.html)
+- [administrative division](https://geoportaal.maaamet.ee/eng/Spatial-Data/Administrative-and-Settlement-Division-p312.html)
+- [WMS shaded relief](https://geoportaal.maaamet.ee/eng/Services/Public-WMS-Service-p346.html)
+
+### Tools
+PostGIS, QGIS.
+
+### Summary
+3d? Ok, I've never really looked into it, but in order to get this done with
+swiftly and without a really huge learning curve, I decided to interpret the
+theme very broadly and did a map of 3 [_estlandssvenskar_](https://en.wikipedia.org/wiki/Estonian_Swedes)
+villages on the Estonian western coast whose names - by coincidence - start with
+the letter D. So here we are: the Villages of Dirslätt, Diby, and Derhamn.
+With colors in the swedish flag motifs.
+
+[hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-11-3d.png)
+
+{{< tweet 1326483119059460100 >}}
