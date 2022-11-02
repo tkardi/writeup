@@ -1,5 +1,5 @@
 ---
-title: "Day 02: lines"
+title: "2020 / Day 02: lines"
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

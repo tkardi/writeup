@@ -1,5 +1,5 @@
 ---
-title: "Day 03: polygons"
+title: "2020 / Day 03: polygons"
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
