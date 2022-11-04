@@ -1,5 +1,6 @@
 ---
 title: "2020 / Day 02: lines"
+date: 2020-11-02T12:34:50+02:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
