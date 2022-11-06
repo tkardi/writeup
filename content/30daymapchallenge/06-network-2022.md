@@ -3,7 +3,7 @@ title: "2022 / Day 06: Network"
 date: 2022-11-05T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
-description: "#30DayMapChallenge: Building an ad hoc graph to do 'open area routing' with pg_routing in PostGIS."
+description: "#30DayMapChallenge: Building an ad hoc graph to do 'open area routing' with pgRouting in PostGIS."
 ---
 Ok. So there might have been a method in the madness i've been producing this
 year for the 30DayMapChallenge because it kind of dawned this morning that
@@ -18,9 +18,9 @@ executable essentially in a blank PostGIS/PostgreSQL database. Today
 unfortunately i sway off this track a little bit - the statement is still a
 single one, with no intermediate tables or indexes or clusters for tables
 created - hence patience in waiting for the result might be required. But
-you'd have to have [`pg_routing`](https://pgrouting.org/) extension in the DB
+you'd have to have [`pgRouting`](https://pgrouting.org/) extension in the DB
 aswell (and if not then the easiest to get up and running with
-[`pg_routing`](https://pgrouting.org/) is most probably using a
+[`pgRouting`](https://pgrouting.org/) is most probably using a
 [docker image](https://hub.docker.com/r/pgrouting/pgrouting/).
 
 Right. but enough of this and lets dive into details. The SQL builds on:
@@ -403,7 +403,7 @@ from (
     where
         z = 0
     union all
-    /* the pg_routing calculated shortest path */
+    /* the pgrouting calculated shortest path */
     select
         2 as ord, geom,
         215 as red, 217 as green, 255 as blue,

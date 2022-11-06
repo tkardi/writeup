@@ -1,6 +1,7 @@
 ---
-title: "Day 07: green"
+title: "2020 / Day 07: green"
 draft: false
+date: 2020-11-07T14:39:51+03:00
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
 ### Data
