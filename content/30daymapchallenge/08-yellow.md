@@ -1,5 +1,6 @@
 ---
-title: "Day 08: yellow"
+title: "2020 / Day 08: yellow"
+date: 2020-11-08T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
