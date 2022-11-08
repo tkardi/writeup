@@ -1,5 +1,6 @@
 ---
-title: "Day 09: monochromatic"
+title: "2020 / Day 09: monochromatic"
+date: 2020-11-09T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
