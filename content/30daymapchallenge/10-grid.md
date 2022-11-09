@@ -1,5 +1,6 @@
 ---
-title: "Day 10: grid"
+title: "2020 / Day 10: grid"
+date: 2020-11-10T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
