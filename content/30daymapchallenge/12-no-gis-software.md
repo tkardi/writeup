@@ -1,5 +1,6 @@
 ---
-title: "Day 12: no gis software"
+title: "2020 / Day 12: no gis software"
+date: 2020-11-12T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
