@@ -1,5 +1,6 @@
 ---
-title: "Day 13: raster"
+title: "2020 / Day 13: raster"
+date: 2020-11-13T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
