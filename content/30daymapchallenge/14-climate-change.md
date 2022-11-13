@@ -1,5 +1,6 @@
 ---
-title: "Day 14: climate change"
+title: "2020 / Day 14: climate change"
+date: 2020-11-14T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
