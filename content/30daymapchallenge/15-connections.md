@@ -1,5 +1,6 @@
 ---
-title: "Day 15: connections"
+title: "2020 / Day 15: connections"
+date: 2020-11-15T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
