@@ -1,5 +1,6 @@
 ---
-title: "Day 16: islands"
+title: "2020 / Day 16: islands"
+date: 2020-11-16T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
