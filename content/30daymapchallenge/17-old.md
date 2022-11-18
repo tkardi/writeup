@@ -1,5 +1,6 @@
 ---
-title: "Day 17: old"
+title: "2020 / Day 17: old"
+date: 2020-11-17T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
