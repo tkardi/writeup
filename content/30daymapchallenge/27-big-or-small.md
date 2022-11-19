@@ -1,5 +1,6 @@
 ---
-title: "Day 27: big or small"
+title: "2020 / Day 27: big or small"
+date: 2020-11-27T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

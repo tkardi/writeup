@@ -1,5 +1,6 @@
 ---
-title: "Day 23: borders"
+title: "2020 / Day 23: borders"
+date: 2020-11-23T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

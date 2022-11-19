@@ -1,5 +1,6 @@
 ---
-title: "Day 21: water"
+title: "2020 / Day 21: water"
+date: 2020-11-21T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

@@ -1,5 +1,6 @@
 ---
-title: "Day 26: new tool"
+title: "2020 / Day 26: new tool"
+date: 2020-11-26T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

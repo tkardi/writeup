@@ -22,6 +22,8 @@ You're very welcome to email your comments or questions on
 any of the posts to [tonis.kardi@gmail.com](mailto:tonis.kardi@gmail.com).
 Otherwise I'm found under the handle @tkardi.
 
+RSS feed for the site is available at [https://tkardi.ee/writeup/index.xml](../index.xml)
+
 This writeup site is generated using the [Hugo](https://gohugo.io/)
 static website generator and the [onetwothree](https://themes.gohugo.io/onetwothree/)
 theme by [schollz](https://schollz.github.io/)

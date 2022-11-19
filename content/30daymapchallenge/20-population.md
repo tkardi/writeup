@@ -1,5 +1,6 @@
 ---
-title: "Day 20: population"
+title: "2020 / Day 20: population"
+date: 2020-11-20T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

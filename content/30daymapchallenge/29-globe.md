@@ -1,5 +1,6 @@
 ---
-title: "Day 29: globe"
+title: "2020 / Day 29: globe"
+date: 2020-11-29T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

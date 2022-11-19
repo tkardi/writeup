@@ -1,5 +1,6 @@
 ---
-title: "Day 24: elevation"
+title: "2020 / Day 24: elevation"
+date: 2020-11-24T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

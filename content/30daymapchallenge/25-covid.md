@@ -1,5 +1,6 @@
 ---
-title: "Day 25: covid"
+title: "2020 / Day 25: covid"
+date: 2020-11-25T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

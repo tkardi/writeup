@@ -1,5 +1,6 @@
 ---
-title: "Day 30: a map"
+title: "2020 / Day 30: a map"
+date: 2020-11-30T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---

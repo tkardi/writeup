@@ -1,5 +1,6 @@
 ---
-title: "Day 28: non geographic map"
+title: "2020 / Day 28: non geographic map"
+date: 2020-11-28T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
