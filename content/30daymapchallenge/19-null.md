@@ -1,5 +1,6 @@
 ---
-title: "Day 19: null"
+title: "2020 / Day 19: null"
+date: 2020-11-19T14:39:51+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
 ---
