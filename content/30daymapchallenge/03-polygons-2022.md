@@ -1,5 +1,5 @@
 ---
-title: "2022 / Day 03: polygons"
+title: "2022 / Day 03: Polygons"
 date: 2022-11-03T09:15:50+03:00
 draft: false
 og_image: "../img/30daymapchallenge/thumb.png"
