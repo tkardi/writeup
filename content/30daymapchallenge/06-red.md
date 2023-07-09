@@ -28,4 +28,4 @@ Export, and...
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-6-red.png)
 
-{{< tweet 1325070797812232193 >}}
+{{< tweet user="tkardi" id="1325070797812232193" >}}

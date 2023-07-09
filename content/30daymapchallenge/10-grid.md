@@ -19,4 +19,4 @@ km in a hex cell.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-10-grid.gif)
 
-{{< tweet 1326431144611631104 >}}
+{{< tweet user="tkardi" id="1326431144611631104" >}}

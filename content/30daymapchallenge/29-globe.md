@@ -76,4 +76,4 @@ from (
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-29-globe.gif)
 
-{{< tweet 1333382826075557888 >}}
+{{< tweet user="tkardi" id="1333382826075557888" >}}

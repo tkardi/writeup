@@ -16,4 +16,4 @@ QGIS
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-21-water.png)
 
-{{< tweet 1330109090983522307 >}}
+{{< tweet user="tkardi" id="1330109090983522307" >}}

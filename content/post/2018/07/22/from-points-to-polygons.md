@@ -36,7 +36,7 @@ I'm mostly writing this down as a way to document it for myself. If you find
 it useful or interesting or have suggestions then feel free to ping me.
 
 ### Addendum 19.03.2019
-{{< tweet 1107543990432342016 >}}
+{{< tweet user="tjukanov" id="1107543990432342016" >}}
 
 After having initially abandoned writing this post because it seemed too
 complicated to pin it down as a step-by-step process, I saw this tweet by Topi Tjukanov

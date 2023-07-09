@@ -33,7 +33,7 @@ is the one that I was really expecting.
 
 ![My custom homemade matrix for "unit-testing" OSRM profiles and my own
 understanding of OpenStreetMap tagging rules. The SQL query
-below will build exactly this matrix](../test-osm-matrix.png)
+below will build exactly this matrix](../img/test-osm-matrix.png)
 
 And with a gazillion of corresponding OSM XML-format files I could test on the
 go very quickly:

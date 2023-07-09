@@ -142,4 +142,4 @@ and _voilà_...
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-2-lines.gif)
 
-{{< tweet 1324265798198824960 >}}
+{{< tweet user="tkardi" id="1324265798198824960" >}}

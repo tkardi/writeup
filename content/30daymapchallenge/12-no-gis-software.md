@@ -61,4 +61,4 @@ And I know I'm evil, but using epsg:3301 for Northern Latvia is ok. I guess... :
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-12-no-gis-software.gif)
 
-{{< tweet 1326755068796936193 >}}
+{{< tweet user="tkardi" id="1326755068796936193" >}}

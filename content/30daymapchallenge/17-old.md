@@ -15,4 +15,4 @@ PostGIS, QGIS.
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-17-old.png)
 
-{{< tweet 1328769021559312387 >}}
+{{< tweet user="tkardi" id="1328769021559312387" >}}

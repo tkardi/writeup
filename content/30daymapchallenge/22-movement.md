@@ -20,4 +20,4 @@ Tallinn (Balti Jaam) by 9:00 AM.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-22-movement.png)
 
-{{< tweet 1330826686234030080 >}}
+{{< tweet user="tkardi" id="1330826686234030080" >}}

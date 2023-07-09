@@ -20,4 +20,4 @@ declared land to the land registered as _forest_.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-18-landuse.png)
 
-{{< tweet 1329117404576755715 >}}
+{{< tweet user="tkardi" id="1329117404576755715" >}}

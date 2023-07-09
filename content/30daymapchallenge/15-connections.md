@@ -13,4 +13,4 @@ PostGIS, QGIS.
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-15-connections.png)
 
-{{< tweet 1327968512942501890 >}}
+{{< tweet user="tkardi" id="1327968512942501890" >}}

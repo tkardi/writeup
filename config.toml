@@ -5,3 +5,6 @@ theme = "onetwothree"
 
 [params]
     navigation = ["about.md"]
+
+[markup.goldmark.renderer]
+    unsafe = true

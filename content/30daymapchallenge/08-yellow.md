@@ -35,4 +35,4 @@ in such a horrible mess that I'd prefer not to publish them... at least not yet
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-8-yellow.png)
 
-{{< tweet 1325885920789270531 >}}
+{{< tweet user="tkardi" id="1325885920789270531" >}}

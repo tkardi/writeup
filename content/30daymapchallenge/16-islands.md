@@ -14,4 +14,4 @@ PostGIS, QGIS, Python, OSRM
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-16-islands.png)
 
-{{< tweet 1328285326939480064 >}}
+{{< tweet user="tkardi" id="1328285326939480064" >}}

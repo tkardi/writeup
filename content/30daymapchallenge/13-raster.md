@@ -17,4 +17,4 @@ Mohni island as an Andy Warhol ripoff
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-13-raster.png)
 
-{{< tweet 1327141565828096000 >}}
+{{< tweet user="tkardi" id="1327141565828096000" >}}

@@ -2,6 +2,7 @@
 title: "Non-overlapping point buffers in PostGIS"
 date: 2022-10-31T14:01:00+03:00
 draft: false
+description: "Build non-overlapping buffers for points in PostGIS using a combination of buffers and voronoi polygons in one query."
 ---
 
 I've never had to deal with this (or at least can't remember that i had to

@@ -15,4 +15,4 @@ Python, PostGIS, QGIS.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-7-green.png)
 
-{{< tweet 1325238127628349441 >}}
+{{< tweet user="tkardi" id="1325238127628349441" >}}

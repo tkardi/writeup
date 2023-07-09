@@ -17,4 +17,4 @@ Tartu between mid-March and early July 2020.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-25-covid.png)
 
-{{< tweet 1331520457284194305 >}}
+{{< tweet user="tkardi" id="1331520457284194305" >}}

@@ -14,4 +14,4 @@ PostGIS, QGIS
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-30-map.png)
 
-{{< tweet 1333394476883189761 >}}
+{{< tweet user="tkardi" id="1333394476883189761" >}}

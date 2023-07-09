@@ -14,7 +14,7 @@ Back in the end of April this year I saw
 [@RealIvanSanchez](https://twitter.com/RealIvanSanchez) tweet about xkcds
 Madagascator.
 
-{{< tweet 1520105735073456128 >}}
+{{< tweet user="RealIvanSanchez" id="1520105735073456128" >}}
 
 ... and I decided to chip in with my own version using pure SQL
 

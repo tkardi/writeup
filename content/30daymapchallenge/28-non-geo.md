@@ -20,4 +20,4 @@ street line (literally) has no meaning whatsoever.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-28-non-geo.png)
 
-{{< tweet 1333007847551070209 >}}
+{{< tweet user="tkardi" id="1333007847551070209" >}}

@@ -16,4 +16,4 @@ at Te Waipounamu.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-24-elevation.png)
 
-{{< tweet 1331235461407383556 >}}
+{{< tweet user="tkardi" id="1331235461407383556" >}}

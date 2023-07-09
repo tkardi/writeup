@@ -21,4 +21,4 @@ units you'd need to buy for this trip to be economically feasible.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-23-borders.png)
 
-{{< tweet 1330902173442519041 >}}
+{{< tweet user="tkardi" id="1330902173442519041" >}}

@@ -26,4 +26,4 @@ thing that could be questioned.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-9-monochromatic.png)
 
-{{< tweet 1326037735224844289 >}}
+{{< tweet user="tkardi" id="1326037735224844289" >}}

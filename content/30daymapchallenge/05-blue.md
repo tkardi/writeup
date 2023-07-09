@@ -23,4 +23,4 @@ Well here you go
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-5-blue.png)
 
-{{< tweet 1324729622098042885 >}}
+{{< tweet user="tkardi" id="1324729622098042885" >}}

@@ -15,4 +15,4 @@ PostGIS, QGIS.
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-14-climate-change.png)
 
-{{< tweet 1327596189026574336 >}}
+{{< tweet user="tkardi" id="1327596189026574336" >}}

@@ -14,4 +14,4 @@ OGR, PostGIS, QGIS, Inkscape
 ### Summary
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-20-population.png)
 
-{{< tweet 1329783174327627782 >}}
+{{< tweet user="tkardi" id="1329783174327627782" >}}

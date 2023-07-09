@@ -25,4 +25,4 @@ their postal code value.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-1-points.png)
 
-{{< tweet 1324022554898669569 >}}
+{{< tweet user="tkardi" id="1324022554898669569" >}}

@@ -17,4 +17,4 @@ album then you can view this map of Tartu in 3D.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-26-new-tool.png)
 
-{{< tweet 1332387993986998273 >}}
+{{< tweet user="tkardi" id="1332387993986998273" >}}

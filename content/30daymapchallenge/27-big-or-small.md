@@ -17,4 +17,4 @@ points or draw the graphs.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-27-big-or-small.png)
 
-{{< tweet 1332660756794454018 >}}
+{{< tweet user="tkardi" id="1332660756794454018" >}}

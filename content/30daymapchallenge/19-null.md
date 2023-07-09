@@ -17,4 +17,4 @@ _Unfortonately this SQL seems to have not survived._
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-19-null.png)
 
-{{< tweet 1329317361762111488 >}}
+{{< tweet user="tkardi" id="1329317361762111488" >}}

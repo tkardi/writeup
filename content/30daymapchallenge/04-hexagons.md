@@ -130,4 +130,4 @@ from here on in plain SQL.
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-4-hexagons.gif)
 
-{{< tweet 1324680520559722498 >}}
+{{< tweet user="tkardi" id="1324680520559722498" >}}

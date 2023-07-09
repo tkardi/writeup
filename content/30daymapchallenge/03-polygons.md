@@ -83,4 +83,4 @@ And the result as seen with the help of QGIS TimeManager:
 
 [hi-res](https://tkardi.ee/writeup/img/30daymapchallenge/day-3-polygons.gif)
 
-{{< tweet 1324321406646177797 >}}
+{{< tweet user="tkardi" id="1324321406646177797" >}}
