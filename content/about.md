@@ -13,6 +13,9 @@ the name LonLat OÜ. Most often you'll find me offering my services under the
 auspices of [UEC OÜ](http://uec.ee/) to bring you spatial awareness in IT
 consultancy.
 
+[OSGeo](https://osgeo.org) [charter member](https://www.osgeo.org/about/membership-rules/) since 2017.
+[FOSS4G Europe 2024](https://2024.europe.foss4g.org/) conference chair.
+
 This is the place I will be trying to do some writing up on the things that
 I've been up to with (mainly) FOSS4G software. Mostly for
 keeping track for myself, but hopefully it will be of some use for you, dear
