@@ -14,7 +14,10 @@ auspices of [UEC OÜ](http://uec.ee/) to bring you spatial awareness in IT
 consultancy.
 
 [OSGeo](https://osgeo.org) [charter member](https://www.osgeo.org/about/membership-rules/) since 2017.
-[FOSS4G Europe 2024](https://2024.europe.foss4g.org/) conference chair.
+FOSS4G Program Committee member on occasions since then, I co-chaired the General
+Program Committee for FOSS4G 2023 in Prizren (Kosovo).
+[FOSS4G Europe 2024](https://2024.europe.foss4g.org/) conference chair. A
+_general menace_ for [FOSS4G Europe 2025](https://2025.europe.foss4g.org/).
 
 This is the place I will be trying to do some writing up on the things that
 I've been up to with (mainly) FOSS4G software. Mostly for
