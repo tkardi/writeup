@@ -263,3 +263,126 @@ dont_unless_do_add_multiplication = sum(
 ## "oneliner" without any imports :D
 
 ```
+
+## <a id="day4" href="#day4">Day 4</a>
+[Challenge](https://adventofcode.com/2024/day/4)
+
+```python
+with open('./advent-of-code/input-day-4.txt') as f:
+    data = f.read()
+
+# this going to be a lot of looping, so I'm kind of thinking in the line of
+# moving windows. But instead of doing proper moving window of 4*4 letters
+# (XMAS*XMAS) because it's easier to loop once and extract values per rows
+# rather than try to extract the exact values within windows.
+# A couple of ideas:
+# - the number of windows we need is (matrix_width-3)*(matrix_height).
+#   width-3 because XMAS is 4 char long, and height because we want to
+#   search all rows
+# - search only by rows and use a transposed matrix instead of searching by
+#   columns
+# - search for XMAS and SAMX, no need to reverse text in window
+# - diagonals don't need transposed search
+#
+
+# the full matrix as list of lists (rows) of chars (columns)
+lines = [
+  [*row] \
+    for row in data.split("\n") \
+      if row > ""
+]
+
+# transpose chars matrix so
+#[
+#  ['A', 'B'],
+#  ['C', 'D']
+#]
+# .. becomes
+#[
+#  ['A', 'C'],
+#  ['B', 'D']
+#]
+transposed_lines = [
+  [row[i] for row in lines] \
+    for i in range(len(lines[0]))
+]
+
+# find count of XMAS
+xmas_samx = len(
+  list(
+    filter(
+      lambda cand: cand == 'XMAS' or cand == 'SAMX',
+        [
+          # flatten the inner lists, we don't need to know that
+          cand for cands in \
+            # search rows
+            [
+              [
+                "".join(lines[row][column:column+4]) \
+                  for column in range(len(lines[0])-3)
+              ] \
+                for row in range(len(lines))
+            ]+\
+            # search transposed rows
+            [
+              [
+                "".join(transposed_lines[row][column:column+4]) \
+                  for column in range(len(lines[0])-3)
+              ] \
+                for row in range(len(lines))
+            ]+\
+            # search desc diagonals
+            [
+              [
+                "".join([lines[row+i][column+i] for i in range(4)]) \
+                  for column in range(len(lines[0])-3)
+              ] \
+                for row in range(len(lines)-3)
+            ]+\
+            # search asc diagonals
+            [
+              [
+                "".join([lines[row+3-i][column+i] for i in range(4)]) \
+                  for column in range(len(lines[0])-3)
+              ] \
+                for row in range(len(lines)-3)
+            ] \
+              for cand in cands
+        ]
+    )
+  )
+)
+
+# for the second challenge it looks like the window approach was good, let's
+# adapt it. All MAS diagonals we are looking for will be always in the same
+# window so we'll look for diagonals in 3*3 window and then check the
+# indexes where both asc and desc lists have MAS or SAM in the same
+# row and column index value
+
+mas_sam = list(
+  map(
+    lambda diagonal: \
+      [
+        diagonal[0][row][column] in ["MAS","SAM"] and \
+        diagonal[1][row][column] in ["MAS","SAM"] \
+          for column in range(len(diagonal[0][1])) \
+            for row in range(len(diagonal[0]))
+      ],
+      [[
+        [
+          [
+            "".join([lines[row+i][column+i] for i in range(3)]) \
+              for column in range(len(lines[0])-2)
+          ] for row in range(len(lines)-2)
+        ],
+        [
+          [
+            "".join([lines[row+2-i][column+i] for i in range(3)]) \
+              for column in range(len(lines[0])-2)
+          ] for row in range(len(lines)-2)
+        ]
+      ]]
+    )
+  )[0].count(True)
+
+```
