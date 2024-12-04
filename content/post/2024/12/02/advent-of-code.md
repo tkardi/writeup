@@ -11,7 +11,8 @@ page that will be updated as I go along. I'll try to do it in Python and without
 doing any imports and with as little lines (newlines for readability) as I
 possibly can, meaning it will at some places get very messy...
 
-# Day 1
+
+## <a id="day1" href="#day1">Day 1</a>
 [Challenge](https://adventofcode.com/2024/day/1)
 
 ```python
@@ -50,9 +51,8 @@ similarity_score = sum(
 )
 ```
 
-# Day 2
+## <a id="day2" href="#day2">Day 2</a>
 [Challenge](https://adventofcode.com/2024/day/2)
-
 
 ```python
 with open('./tmp/advent-of-code/input-day-2.txt') as f:
@@ -144,4 +144,122 @@ total_safe_reports = safe_reports + extra_safe_reports
 
 # (facepalm) most probably with normal procedural planning this would be
 # (and look) much simpler
+```
+
+## <a id="day3" href="#day3">Day 3</a>
+[Challenge](https://adventofcode.com/2024/day/3)
+
+```python
+with open('./advent-of-code/input-day-3.txt') as f:
+    lines = f.read()
+
+# this looks like job for regex, but trying to stay true to the idea of no
+# imports... (and i already know I'm going to weep when doing the second part)
+
+# answer to "add all multiplications"
+add_multiplication = sum(
+  list(
+    map(
+      lambda int_pairs: int(int_pairs[0])*int(int_pairs[1]),
+      list(
+        filter(
+          lambda possible_int: \
+            possible_int[0].isdigit() and possible_int[1].isdigit(),
+            [
+              [
+                token[0][1:],
+                token[1][:token[1].find(")")]
+              ] \
+                for token in [
+                  token.split(",") \
+                    for token in list(
+                      filter(
+                        lambda possible_token: \
+                          possible_token.startswith("(") and \
+                          possible_token.find(",") > 1 and \
+                          possible_token.find(")") > 3 and \
+                          possible_token.find(",") < possible_token.find(")")-1,
+                          lines.split("mul")
+                      )
+                    )
+                ]
+            ]
+        )
+      )
+    )
+  )
+)
+
+# ... and after seeing the second task, yes, my thoughts were correct in the
+# beginning. BUT what the what... we are here to solve problems as they arise
+# to exactly to the amount that is needed :D
+
+# so with the do-s and don't-s. the general idea would be to:
+# a) split the whole string at don't()-s to a list
+# b) filter out only those that have the a do()-instruction in them
+#    (meaning "".find("do()") > -1)
+# c) split every filtered string at do()
+# d) merge it back to a single string using only the slice of [1:] (because
+#    whatever was before is a don't())
+# e) run the same construction as before
+#
+# for this to work we need to add an explicit do() into the very beginning of
+# the input string
+
+dont_unless_do_add_multiplication = sum(
+  list(
+    map(
+      lambda int_pairs: int(int_pairs[0])*int(int_pairs[1]),
+      list(
+        filter(
+          lambda possible_int: \
+            possible_int[0].isdigit() and possible_int[1].isdigit(),
+            [
+              [
+                token[0][1:],
+                token[1][:token[1].find(")")]
+              ] \
+                for token in [
+                  token.split(",") \
+                    for token in list(
+                      filter(
+                        lambda possible_token: \
+                          possible_token.startswith("(") and \
+                          possible_token.find(",") > 1 and \
+                          possible_token.find(")") > 3 and \
+                          possible_token.find(",") < possible_token.find(")")-1,
+                          "".join(
+                            [
+                              "".join(dosplit[1:]) \
+                                for dosplit in [
+                                  considerdoing.split("do()") \
+                                    for considerdoing in list(
+                                      filter(
+                                        lambda instruction: \
+                                          instruction.find("do")>-1,
+                                          [
+                                            dontsplit \
+                                              for dontsplit in \
+                                                f"do(){lines}".split(
+                                                  "don't()"
+                                                )
+                                          ]
+                                      )
+                                    )
+                                ]
+                            ]
+                          ).split("mul")
+                      )
+                    )
+                ]
+            ]
+        )
+      )
+    )
+  )
+)
+
+## ... regex would have been nicer, but this works and shows it can be done as a
+## "oneliner" without any imports :D
+
 ```
