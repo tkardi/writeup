@@ -11,6 +11,10 @@ page that will be updated as I go along. I'll try to do it in Python and without
 doing any imports and with as little lines (newlines for readability) as I
 possibly can, meaning it will at some places get very messy...
 
+# <a id="index" href="#index">Index</a>
+<a href="#day1">#1</a> | <a href="#day2">#2</a> | <a href="#day3">#3</a> |
+<a href="#day4">#4</a> | <a href="#day5">#5</a>
+
 
 ## <a id="day1" href="#day1">Day 1</a>
 [Challenge](https://adventofcode.com/2024/day/1)
@@ -50,6 +54,7 @@ similarity_score = sum(
   [el*list2.count(el) for el in list1]
 )
 ```
+<a href="#index">^ Index</a>
 
 ## <a id="day2" href="#day2">Day 2</a>
 [Challenge](https://adventofcode.com/2024/day/2)
@@ -145,6 +150,7 @@ total_safe_reports = safe_reports + extra_safe_reports
 # (facepalm) most probably with normal procedural planning this would be
 # (and look) much simpler
 ```
+<a href="#index">^ Index</a>
 
 ## <a id="day3" href="#day3">Day 3</a>
 [Challenge](https://adventofcode.com/2024/day/3)
@@ -263,6 +269,7 @@ dont_unless_do_add_multiplication = sum(
 ## "oneliner" without any imports :D
 
 ```
+<a href="#index">^ Index</a>
 
 ## <a id="day4" href="#day4">Day 4</a>
 [Challenge](https://adventofcode.com/2024/day/4)
@@ -386,3 +393,150 @@ mas_sam = list(
   )[0].count(True)
 
 ```
+<a href="#index">^ Index</a>
+
+## <a id="day5" href="#day5">Day 5</a>
+[Challenge](https://adventofcode.com/2024/day/5)
+
+```python
+with open('./advent-of-code/input-day-5.txt') as f:
+    data = f.read()
+
+rules, rows = [
+  p.strip("\n").split("\n") \
+    for p in data.split("\n\n")
+]
+
+rules_idx = dict(
+  [
+    [
+      int(key),
+      [
+        int(v.split("|")[1]) \
+          for v in \
+            list(
+              filter(
+                lambda a: \
+                  a.split("|")[0] == key,
+                  rules
+              )
+            )
+      ]
+    ] \
+      for key in \
+        set(
+          [
+            s[0] for s in [
+              rule.split("|") for rule in rules
+            ]
+          ]
+        )
+  ]
+)
+
+# sum of correct order mid-page-numbers
+sum(
+  list(
+    map(
+      lambda pages: \
+        pages[int(len(pages)/2)],
+        filter(
+          lambda ps: [
+            [
+              rules_idx.get(p) == None or \
+                [
+                  c not in rules_idx[p] \
+                    for c in ps[0:ps.index(p)]
+                ].count(False)==0
+            ][0] \
+              for p in ps
+          ].count(False) == 0,
+          map(
+            lambda pages: \
+              [
+                int(page) \
+                  for page in pages
+              ],
+              [
+                pages.split(",") \
+                  for pages in rows
+              ]
+          )
+        )
+    )
+  )
+)
+
+## second question
+# NOK ordered pages:
+# - find them by reversing the previously used filter
+
+nok_pages_lists = list(
+  filter(
+    lambda ps: [
+      [
+        rules_idx.get(p) == None or \
+          [
+            c not in rules_idx[p] \
+              for c in ps[0:ps.index(p)]
+          ].count(False)==0
+      ][0] \
+        for p in ps
+    ].count(False) > 0,
+    map(
+      lambda pages: \
+        [
+          int(page) \
+            for page in pages
+        ],
+        [
+          pages.split(",") \
+            for pages in rows
+        ]
+    )
+  )
+)
+
+# - ... and establish "correct order" (although we need only the middle-most page
+#   number) by counting (per every page numbers list) how many times every
+#   number appears in the "after-pages". The idea being that we can estimate
+#   the order without really checking/fixing the order: if the list is
+#   N numbers long and a number appers N-1 timees in the "afterlist", then it is
+#   expected to have N-1 numbers in front for the current combination of
+#   pagenumbers. Similarly, if it does not not appear in "after-pages", then it
+#   must be the the first.
+# This is not actually a correct way of establishing it, but just works
+# here :) - e.g. if there's a number in the NOK pages list that does not appear
+# neither as a key or as after-pages list in the rules_idx dict then it's
+# location should not change.
+
+sum_of_nok_mids = sum(
+  list(
+    map(
+      lambda nok_pages, ord: \
+        sorted(
+          nok_pages,
+          key=lambda x: \
+            ord[nok_pages.index(x)]
+        )[int((len(nok_pages)-1)/2)],
+        nok_pages_lists,
+        list(
+          map(
+            lambda nok_pages: [
+              [
+                page in v \
+                  for v in [
+                    rules_idx[p] for p in nok_pages
+                  ]
+              ].count(True) \
+                for page in nok_pages
+            ],
+            nok_pages_lists
+          )
+        )
+    )
+  )
+)
+
+```
+<a href="#index">^ Index</a>
