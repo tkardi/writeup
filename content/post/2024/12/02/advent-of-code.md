@@ -12,8 +12,12 @@ doing any imports and with as little lines (newlines for readability) as I
 possibly can, meaning it will at some places get very messy...
 
 # <a id="index" href="#index">Index</a>
-<a href="#day1">#1</a> | <a href="#day2">#2</a> | <a href="#day3">#3</a> |
-<a href="#day4">#4</a> | <a href="#day5">#5</a>
+<a href="#day1">#1</a> |
+
+<a href="#day2">#2</a> | <a href="#day3">#3</a> | <a href="#day4">#4</a> |
+<a href="#day5">#5</a> | <a href="#day6">#6</a> | <a href="#day7">#7</a>
+
+<a href="#day8">#8</a>  
 
 
 ## <a id="day1" href="#day1">Day 1</a>
@@ -539,4 +543,514 @@ sum_of_nok_mids = sum(
 )
 
 ```
+<a href="#index">^ Index</a>
+
+## <a id="day6" href="#day6">Day 6</a>
+[Challenge](https://adventofcode.com/2024/day/6)
+
+```python
+with open('./advent-of-code/input-day-6.txt') as f:
+    data = f.read()
+
+# process map data to a list of lists of "network nodes"
+guard_map = [
+  [*row] \
+    for row in data.split("\n") \
+      if row > ""
+]
+
+# build "routing matrix" from "network nodes"
+matrix = {
+  (x, y): column \
+    for y, row in enumerate(guard_map) \
+      for x, column in enumerate(row)
+}
+
+# initialize trail by dinding guard location
+path = [(k,v) for k, v in matrix.items() if v in ["^", ">", "v", "<"]]
+
+# walk the path according to rules
+_ = [
+  path.insert(
+    len(path),
+    tuple(
+      map(
+        lambda mv: \
+          # go up
+          ( (mv[0][0], mv[0][1]-1), "^") if mv[1]=="^" and \
+            matrix.get((mv[0][0], mv[0][1]-1), "X") != "#" else (
+          # go right
+          ( (mv[0][0]+1, mv[0][1]), ">") if mv[1]==">" and \
+            matrix.get((mv[0][0]+1, mv[0][1]), "X") != "#" else (
+          # go left
+          ( (mv[0][0]-1, mv[0][1]), "<") if mv[1]=="<" and \
+            matrix.get((mv[0][0]-1, mv[0][1]), "X") != "#" else (
+          # go down
+          ( (mv[0][0], mv[0][1]+1), "v") if mv[1]=="v" and \
+            matrix.get((mv[0][0], mv[0][1]+1), "X") != "#" else (
+          # turn right instead of moving up
+          ( (mv[0][0], mv[0][1]), ">") if mv[1]=="^" and \
+            matrix.get((mv[0][0], mv[0][1]-1), "X") == "#" else (
+          # turn down instead of moving right
+          ( (mv[0][0], mv[0][1]), "v") if mv[1]==">" and \
+            matrix.get((mv[0][0]+1, mv[0][1]), "X") == "#" else (
+          # turn left instead of moving down
+          ( (mv[0][0], mv[0][1]), "<") if mv[1]=="v" and \
+            matrix.get((mv[0][0], mv[0][1]+1), "X") == "#" else (
+          # turn up instead of moving left
+          ( (mv[0][0], mv[0][1]), "^") if mv[1]=="<" and \
+            matrix.get((mv[0][0]-1, mv[0][1]), "X") == "#" else (
+          # smth wrong...
+          (-1,-1), "X")
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          [move]
+      )
+    )[0]
+  ) \
+    for move in path \
+      if move[1] != "X" and \
+        move[0][0] >= 0 and \
+        move[0][1] >= 0 and \
+        move[0][0] <= len(guard_map[0])-1 and \
+        move[0][1] <= len(guard_map)-1
+]
+
+# number of distinct locations the guard visits
+
+count_distinct_locations = len(
+  set(
+    [
+      move[0] \
+        for move in path[:-1]
+    ]
+  )
+)
+
+## and obstruction can be placed anywhere on the path
+## except out of guard_map and the first loc where the
+## guard is
+obs = list(set([loc[0] for loc in path[:-1] if loc[0]!=path[0][0]]))
+
+## initialize the possible paths the guard we
+## will be walking
+loop_paths = [path[0] for i in range(len(obs))]
+
+## walk paths
+_ = [
+  [
+    loop_path.insert(
+      len(loop_path),
+      tuple(
+        map(
+          lambda mv, rs: \
+            # check loop, i.e move in this direction
+            # is already in path. mark it as X for quits
+            ( (mv[0][0], mv[0][1]), "X") if mv in loop_path[:-1] else (
+            # go up
+            ( (mv[0][0], mv[0][1]-1), "^") if mv[1]=="^" and \
+              (mv[0][0], mv[0][1]-1) != rs and \
+              matrix.get((mv[0][0], mv[0][1]-1), "X") != "#" else (
+            # go right
+            ( (mv[0][0]+1, mv[0][1]), ">") if mv[1]==">" and \
+              (mv[0][0]+1, mv[0][1]) != rs and \
+              matrix.get((mv[0][0]+1, mv[0][1]), "X") != "#" else (
+            # go left
+            ( (mv[0][0]-1, mv[0][1]), "<") if mv[1]=="<" and \
+              (mv[0][0]-1, mv[0][1]) != rs and \
+              matrix.get((mv[0][0]-1, mv[0][1]), "X") != "#" else (
+            # go down
+            ( (mv[0][0], mv[0][1]+1), "v") if mv[1]=="v" and \
+              (mv[0][0], mv[0][1]+1) != rs and \
+              matrix.get((mv[0][0], mv[0][1]+1), "X") != "#" else (
+            # turn right instead of moving up
+            ( (mv[0][0], mv[0][1]), ">") if mv[1]=="^" and \
+              (matrix.get((mv[0][0], mv[0][1]-1), "X") == "#" or \
+                (mv[0][0], mv[0][1]-1) == rs) else (
+            # turn down instead of moving right
+            ( (mv[0][0], mv[0][1]), "v") if mv[1]==">" and \
+              (matrix.get((mv[0][0]+1, mv[0][1]), "X") == "#" or \
+                (mv[0][0]+1, mv[0][1]) == rs) else (
+            # turn left instead of moving down
+            ( (mv[0][0], mv[0][1]), "<") if mv[1]=="v" and \
+              (matrix.get((mv[0][0], mv[0][1]+1), "X") == "#" or \
+                (mv[0][0], mv[0][1]+1) == rs) else (
+            # turn up instead of moving left
+            ( (mv[0][0], mv[0][1]), "^") if mv[1]=="<" and \
+              (matrix.get((mv[0][0]-1, mv[0][1]), "X") == "#" or \
+                (mv[0][0]-1, mv[0][1]) == rs) else (
+            # smth wrong
+            (-1,-1), "Y")
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              ),
+            [move],
+            [obs[i]]
+        )
+      )[0]
+    ) \
+      for move in loop_path if \
+        move[1] not in [ "X", "Y"] and \
+        move[0][0] >= 0 and \
+        move[0][1] >= 0 and \
+        move[0][0] <= len(guard_map[0])-1 and \
+        move[0][1] <= len(guard_map)-1
+  ] \
+    for (i,loop_path) in enumerate(loop_paths)
+]
+
+## count number of paths finishing on a loop
+possible_loopers = len(
+  [
+    obs[i] \
+      for i, lp in enumerate(loop_paths) \
+        if lp[-1][1] == 'X'
+  ]
+)
+
+```
+<a href="#index">^ Index</a>
+
+## <a id="day7" href="#day7">Day 7</a>
+[Challenge](https://adventofcode.com/2024/day/7)
+
+```python
+with open('./advent-of-code/input-day-7.txt') as f:
+    data = f.read()
+
+# prepare equations with all possible combinations of additions and
+# multiplications. That will equal 2^number-of-spaces equations. create a
+# range and cast to 0-padded binary so that we'll take 0 as addition and
+# 1 as multiplication, e.g.:
+#
+# eq = "10 20 30"
+# >>> [
+# ...    f"{bin(i)[2:]}".rjust(eq.count(" "), "0") \
+# ...        for i in range(pow(2,eq.count(" ")))
+# ... ]
+# ['00', '01', '10', '11']
+# >>>
+#
+# the prepared statements itself is a dict with (result, equation-numbers) tuple
+# as the key and a dict of equation mask and solution list key-value pairs
+# as a value, e.g.:
+#
+# >>> {
+# ...  (230, 10, 20, 30): {
+# ...    "00": [10],
+# ...    "01": [10],
+# ...    "10": [10],
+# ...    "11": [10]  
+# ...  }
+# ... }
+# >>>
+#
+
+eqs = {
+  tuple(
+    [int(a)]+[int(f) for f in b.split(" ")]
+  ):{
+    f"{bin(i)[2:]}".rjust(b.count(" "), "0"):[int(b.split(" ")[0])] \
+      for i in range(pow(2, b.count(" ")))
+  } for a, b in [
+    eq.split(": ") \
+      for eq in data.split("\n") if eq.strip() > ""
+  ]
+}
+
+# Execute every equation combination just like reduce but without importing
+# reduce from collections (some other cases for it used in previous days too)
+
+_ = [
+  [
+    [
+      solve.insert(
+        len(solve),
+        list(
+          map(
+            lambda equation: \
+              solve[-1] + numbers[i+2] \
+                if equation[1] == "0" else \
+                  solve[-1] * numbers[i+2],
+              [(i, maskbit)]
+          )
+        )[0]
+      ) for i, maskbit in enumerate([*eq])
+    ] for eq, solve in solutions.items()
+  ] for numbers, solutions in eqs.items()
+]
+
+# sum all results from equations that have at least one correct result
+
+calibration_result = sum(
+  set(
+    [
+      k[0] for k,v in eqs.items() \
+        for (eq, sol) in v.items() \
+          if k[0] == sol[-1]
+    ]
+  )
+)
+
+# for the second part let's switch from binary to ternary (base 3), so 0 for
+# addition, 1 for multiplication, and 2 for concatenation. There might be other
+# ways built-in to python (that i don't know of and don't know how to search
+# for as this is the first time in my life that i come into contact with
+# base 3 numbers at all i think), but staying true to no-imports and no-defs
+# I'll calculate these on-spot. Getting a recursion to work in
+# list-comprehension is painful, but possible... :D
+#
+# So, e.g. for two spaces before with two operations we needed 2^2 possible
+# equation-masks. For two space with three possible operations we'll need
+# 3^2 possible operations (and 3^3 for three spaces, and 3^4 for 4 spaces).
+# All the "equation-masks" will need to be calculated beforehand, and stored
+# as a variable.
+#
+# init the ternary calculation. I'll calculate the values only up until the
+# number that is needed (i.e. only those eqs that did not find a solution
+# before)
+
+solved = set(
+  [
+    k \
+      for k,v in eqs.items() \
+        for (eq, sol) in v.items() \
+          if k[0] == sol[-1]
+  ]
+)
+
+ternaries = {
+  i:{"s":"", "n":i} \
+    for i in range(
+      pow(
+        3,
+        max(
+          [
+            b.count(" ") for a, b in [
+              eq.split(": ") for eq in data.split("\n") if eq.strip() > ""
+            ] if tuple([int(a)]+[int(f) for f in b.split(" ")]) not in solved
+          ]
+        ) + 1
+      )
+    )
+}
+
+# use the created ternary dict and loop in list comprehension calculating
+# the base 3 value for every dict key. Why 20? because we should cap somewhere
+# and most proably there is a better way to control this, but currently it's
+# good enough. Anyway. Calculate base 3 values
+
+_ = [
+  [
+    v.update(
+      {
+        "s":str(v["n"]%3)+v["s"],
+        "n":v["n"]//3
+      }
+    ) for i in range(20) \
+        if v["n"]!=0
+  ] for k, v in ternaries.items()
+]
+
+# so we end up with:
+#
+# >>> _ = [
+# ...     print(
+# ...         f"decimal {i} == {ternaries[i]['s'].rjust(1,'0')} in base3"
+# ...     ) for i in range(10)
+# ... ]
+# decimal 0 == 0 in base3
+# decimal 1 == 1 in base3
+# decimal 2 == 2 in base3
+# decimal 3 == 10 in base3
+# decimal 4 == 11 in base3
+# decimal 5 == 12 in base3
+# decimal 6 == 20 in base3
+# decimal 7 == 21 in base3
+# decimal 8 == 22 in base3
+# decimal 9 == 100 in base3
+# >>>
+
+# recreate the eqs from input, but discard the already solved ones (no
+# need to recalculate these)
+
+eqs = {
+  tuple(
+    [int(a)]+[int(f) for f in b.split(" ")]
+  ):{
+    ternaries[i]["s"].rjust(b.count(" "), "0"):[int(b.split(" ")[0])] for i in range(pow(3,b.count(" ")))
+  } for a, b in [
+    eq.split(": ") for eq in data.split("\n") if eq.strip() > ""
+  ] if tuple([int(a)]+[int(f) for f in b.split(" ")]) not in solved
+}
+
+# update the previous lambda to include the concat operation too and run
+
+_ = [
+  [
+    [
+      solve.insert(
+        len(solve),
+        list(
+          map(
+            lambda equation: \
+              solve[-1] + numbers[i+2] if equation[1] == "0" else (
+               solve[-1] * numbers[i+2] if equation[1] == "1" else (
+                 int(str(solve[-1])+str(numbers[i+2]))
+               )
+              ),
+              [(i,el)]
+          )
+        )[0]
+      ) for i,el in enumerate([*eq])
+    ] for eq, solve in solutions.items()
+  ] for numbers, solutions in eqs.items()
+]
+
+# .. and for the final result
+calibration_result += sum(
+  set(
+    [
+      k[0] \
+        for k,v in eqs.items() \
+          for (eq, sol) in v.items() \
+            if k[0] == sol[-1]
+    ]
+  )
+)
+
+
+```
+<a href="#index">^ Index</a>
+
+## <a id="day8" href="#day8">Day 8</a>
+[Challenge](https://adventofcode.com/2024/day/8)
+
+```python
+with open('./advent-of-code/input-day-8.txt') as f:
+    data = f.read()
+
+# parse to a list of lists
+antenna_map = [
+  [*row] \
+    for row in data.split("\n") \
+      if row > ""
+]
+
+# store for easy access based on coordinates. this is a bit
+# irrelevant, but makes
+# for easy access for creating the antenna locs dict in
+# the next step + later
+# easy access to get "what's there" (call it "reverse geocoding")
+matrix = {
+  (x, y): column \
+    for y, row in enumerate(antenna_map) \
+      for x, column in enumerate(row)
+}
+
+# distinct antennas to their locations...
+antenna_locs = {
+  v: [
+    loc for loc, x in matrix.items() \
+      if x == v
+  ] \
+    for _, v in matrix.items() \
+      if v in set(
+        [
+          mark \
+            for row in antenna_map \
+              for mark in row \
+                if mark != '.'
+        ]
+      )
+}
+
+# pair all distinct antennas and calculated their antinode locations so that
+# every antenna-pair is listed only once and antinodes are added as
+# first and last locations to the antenna pair coordinates list
+# The followig is effectively looping only the "the upper half from the main
+# diagonal" of the "distance matrix" (only the cells marked with "o" for the
+# following):
+#
+#   | A | B | C | D |
+# --|---|---|---|---|
+# A | x | o | o | o |
+# B | x | x | o | o |
+# C | x | x | x | o |
+# D | x | x | x | x |
+
+ants = {
+  k: [
+    [
+      [
+        # first antinode
+        (
+          v[i][0]+(v[i][0]-v[j][0]),
+          v[i][1]+(v[i][1]-v[j][1])
+        ),
+        # first of the antenna pair
+        v[i],
+        # second of the antenna pair
+        v[j],
+        # second antinode
+        (
+          v[j][0]+(v[j][0]-v[i][0]),
+          v[j][1]+(v[j][1]-v[i][1])
+        )
+      ] for j in range(i, len(v)) \
+        if i < j and \
+          # neither of antinodes should be at the same
+          # frequency antenna location
+          matrix.get(
+            (
+              v[i][0]+(v[i][0]-v[j][0]),
+              v[i][1]+(v[i][1]-v[j][1]))
+            ) != k and \
+          matrix.get(
+            (
+              v[j][0]+(v[j][0]-v[i][0]),
+              v[j][1]+(v[j][1]-v[i][1]))
+            ) != k
+    ] for i, locs in enumerate(v[:-1])
+  ] for k, v in antenna_locs.items()
+}
+
+distinct_antinodes_count = len(
+  set(
+    [
+     # get locations within map bounds
+     # and flatten lists over frequencies
+      n \
+        for n in [
+          # get locations and flatten lists
+          # per frequency pair-rows
+          [v[0],v[-1]] \
+            for v in [
+              g for ant, g in ants.items() for g in g
+            ] \
+              for v in v
+        ] \
+          for n in n \
+            # check antinode location
+            # against map bounding box
+            if n[0]>=0 and \
+              n[1]>=0 and \
+              n[0]<len(antenna_map[0]) and \
+              n[1]<len(antenna_map)
+    ]
+  )
+)
+
+```
+
 <a href="#index">^ Index</a>
